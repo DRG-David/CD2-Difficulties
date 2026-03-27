@@ -1,0 +1,1179 @@
+{
+  "Name": "Dave's Junior V3.6 (5.5x2)",
+  "Description": "
+      
+  ------------------------------
+       RELEASE VERSION: 3.6
+  ------------------------------
+  
+  * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+  ***     Host requires CD2 update 18 or newer      ***
+  * * * * * * * * * * * * * * * * * * * * * * * * * * *
+  
+  This difficulty uses Darth's 'Actual Hazard 5.5x2' difficulty as a base, but includes many features
+  from Dave's Double (wavespawners, elite guards, etc.)
+
+  True Haz 5.5x2 plus:
+  --------------------
+  - Grunt/Web/Acid (70%/15%/15%) WaveSpawner on 80s interval
+    - Starts at 20s for most missios, 300s for PE, 200s for Refinery/Salvage
+    - Difficulty = ((-20 + (60 * DwarvesAmmo)) * (1.25 [if depo nitra >= 180]))
+    - Stopped if anyone is down
+  - Menace/Grabber/Goober/Bulk (32%/32%/32%/4%) WaveSpawner on 100s interval
+    - Starts at 20s for most missions, 300s for PE, 200s for Refinery/Salvage
+    - Difficulty = 1
+    - Stopped if anyone is down
+  - Headbounces removed for CD2 enjoyers 
+  - StationaryDifficulty upped from (175-225) to (225-250)
+    - StationaryDifficulty reduced (150-175) for all hot drop missions (Egg/Refinery/PE/DeepScan)
+  - StationaryEnemyCount/Diversity upped from (5-6 & 3-5) to (7-7 & 7-7)
+  - ECM * 1.2, 1.3, 1.1 DuringExtraction for Default, PE, and Salvage
+  - Refinery ECM is increased slightly during certain phases, RefiningStalled is the largest @ 15%
+  - Younglings/Stalkers removed+
+  - Trash Breeder Jr. (denoted by Elite status) added to enemy pool, bulk rarity
+  - VeteranLarge (Oppressors) chance left unchanged, but swaps to 0 if 2 or more Opps exist
+  - Speed boost (+0.25) given to bugs DuringDillevator
+  - Barragers: SpawnAmountModifier: 0.5 MaxSpawnCount: 1 (2) - 0 (1) for Escort Only
+  - Leeches copied from Double, with 75% speed
+  - Added elite leeches, slow and slightly tankier with a long reach
+  - Exploders replaced with variable speed exploders @ 0.8 0.9 1.0 and 1.25 normal move speed
+  - Guards spawn as Elite at (IWsLeft/150)% chance - 25% weaker than Double variant
+  - Oppressor speed buffed halfway between normal and Double
+  - Copied Brain's D2 XED_DreadHelper descriptor and wavespawner (difficulty 250 > 60) to make elim more fun
+  - Salvage Changes
+    - Bulks no longer have meatballs on Salvage only
+    - Scan duration 2 > 1 second
+    - Repair duration 10 > [10,20,30,40] seconds ByPlayerCount
+      - CoopUseMultiplier = 5 (to promote teamwork)
+    - Required Legs: Random between 2-5
+    - Uplink/Refuel CoopUseMultiplier = 5
+    - Uplink/Refuel scales @ (1.0 + ((EnemyCount - 80)/200) when > 100 enemies are alive
+  - Message sends when a resup becomes available (and notes how much the next will cost)
+  - Message sends when a trash breeder spawns 
+  - Removed bulks from escort encounters
+
+New changes in 3.6:
+-------------------
+- Revive/Regen HP - 20% + 5% per mercy stack
+- Mercy Stacks accumulate every time a player downs up to 4 stacks
+  Lose a stack every 30 seconds without a player down
+- Treeders removed from encounters
+- Treeders nerfed a bit
+- Added sound cue on Treeder spawn (refinery complete sound)
+- Banned warnings/anamolies
+- Pitjaws unchanged (for now), only exist in Ossuary
+- Scrabs promote into scrabs, grunts, and swarmers @ {50,25,25} weight
+- Reduced bug speed boost during DeepScan drill portion
+- Added mission start message with resupply cost info
+
+  ",
+  "Vars": {
+    "MercyStacks": {
+      "Type": "Float",
+      "Value": {
+        "Mutate": "Sequence",
+        "Sequence": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "Repeat": false,
+        "Next": {
+          "Mutate": "TriggerOnChange",
+          "In": {
+            "Mutate": "DwarvesDown"
+          },
+          "RiseOnly": true
+        },
+        "Previous": {
+          "Mutate": "TriggerTimer",
+          "N": 30,
+          "Reset": {
+            "Mutate": "TriggerOnChange",
+            "In": {
+              "Mutate": "DwarvesDown"
+            },
+            "RiseOnly": true
+          }
+        }
+      }
+    }
+  },
+  "Warnings": {
+    "Banned": [
+      "MMUT_BloodSugar",
+      "MMUT_ExplosiveEnemies",
+      "MMUT_ExterminationContract",
+      "MMUT_GoldRush",
+      "MMUT_LowGravity",
+      "MMUT_OxygenRich",
+      "MMUT_RichInMinerals",
+      "MMUT_SecretSecondary",
+      "MMUT_Weakspot",
+      "MMUT_XXXP",
+      "WRN_BulletHell",
+      "WRN_CaveLeechDen",
+      "WRN_ExploderInfestation",
+      "WRN_Ghost",
+      "WRN_HeroEnemies",
+      "WRN_InfestedEnemies",
+      "WRN_LethalEnemies",
+      "WRN_MacteraCave",
+      "WRN_NoOxygen",
+      "WRN_NoShields",
+      "WRN_Plague",
+      "WRN_RegenerativeEnemies",
+      "WRN_RivalIncursion",
+      "WRN_RockInfestation",
+      "WRN_Swarmagedon"
+    ]
+  },
+  "Caps": {
+    "MaxActiveSwarmers": [
+      90,
+      120,
+      180
+    ],
+    "MaxActiveEnemies": [
+      90,
+      120,
+      180
+    ]
+  },
+  "Resupply": {
+    "Cost": {
+      "Mutate": "IfFloat",
+      "Value": {
+        "Mutate": "ResuppliesCalled"
+      },
+      "<=": 1,
+      "Then": 40,
+      "Else": {
+        "Mutate": "ByMissionType",
+        "Default": 60,
+        "Sabotage": 40
+      }
+    }
+  },
+  "Pools": {
+    "MinPoolSize": 50,
+    "StationaryPool": {
+      "Add": [
+        "ED_CaveLeech_Elite"
+      ]
+    },
+    "DisruptiveEnemyPoolCount": {
+      "Min": 4,
+      "Max": 6
+    },
+    "StationaryEnemyCount": {
+      "Min": 7,
+      "Max": 7
+    },
+    "EnemyPool": {
+      "Add": [
+        "XED_Trash_Breeder_Jr",
+        "ED_Spider_Exploder_Variable_Speed"
+      ],
+      "Remove": [
+        "ED_Woodlouse_Youngling",
+        "ED_Spider_Stalker",
+        "ED_Spider_Exploder"
+      ]
+    }
+  },
+  "DifficultySetting": {
+    "BaseHazard": "Hazard 5",
+    "ReviveHealthRatio": {
+      "Mutate": "Add",
+      "A": 0.2,
+      "B": {
+        "Mutate": "Divide",
+        "A": {
+          "Var": "MercyStacks"
+        },
+        "B": 20
+      }
+    },
+    "HealthRegenerationMax": {
+      "Mutate": "Add",
+      "A": 0.2,
+      "B": {
+        "Mutate": "Divide",
+        "A": {
+          "Var": "MercyStacks"
+        },
+        "B": 20
+      }
+    },
+    "ExtraLargeEnemyDamageResistance": [
+      0.875,
+      1.05,
+      1.45,
+      1.9
+    ],
+    "ExtraLargeEnemyDamageResistanceB": [
+      0.85,
+      1,
+      1.25,
+      1.5
+    ],
+    "ExtraLargeEnemyDamageResistanceC": [
+      0.8,
+      1,
+      1.35,
+      1.85
+    ],
+    "ExtraLargeEnemyDamageResistanceD": [
+      1.125,
+      1.175,
+      1.375,
+      1.6
+    ],
+    "EnemyDamageResistance": [
+      1.3,
+      1.35,
+      1.5,
+      1.625
+    ],
+    "EnemyDamageModifier": [
+      3.05,
+      3.325,
+      3.55,
+      3.75
+    ],
+    "EnemyCountModifier": {
+      "Mutate": "Multiply",
+      "A": {
+        "Mutate": "ByPlayerCount",
+        "Values": [
+          1.8,
+          1.9,
+          2.6,
+          3.15
+        ]
+      },
+      "B": {
+        "Mutate": "If",
+        "Condition": {
+          "Mutate": "DuringExtraction"
+        },
+        "Then": {
+          "Mutate": "ByMissionType",
+          "Default": 1.2,
+          "PE": 1.3,
+          "Salvage": 1.1
+        },
+        "Else": 1
+      },
+      "C": {
+        "Mutate": "Add",
+        "A": 1,
+        "B": {
+          "Mutate": "Divide",
+          "A": {
+            "Mutate": "ByRefineryPhase",
+            "Default": 0,
+            "Landing": 0,
+            "ConnectingPipes": 5,
+            "PipesConnected": 10,
+            "Refining": 5,
+            "RefiningStalled": 15,
+            "RefiningComplete": 10,
+            "RocketLaunched": 10
+          },
+          "B": 100
+        }
+      }
+    },
+    "EncounterDifficulty": [
+      {
+        "weight": 1,
+        "min": 325,
+        "max": 425
+      },
+      {
+        "weight": 6,
+        "min": 375,
+        "max": 575
+      },
+      {
+        "weight": 1,
+        "min": 475,
+        "max": 575
+      }
+    ],
+    "StationaryDifficulty": [
+      {
+        "weight": 1,
+        "min": {
+          "Mutate": "ByDNA",
+          "Default": 225,
+          "Refinery": 150,
+          "Egg": 150,
+          "DeepScan": 150,
+          "PE": 150
+        },
+        "max": {
+          "Mutate": "ByDNA",
+          "Default": 250,
+          "Refinery": 175,
+          "Egg": 175,
+          "DeepScan": 175,
+          "PE": 175
+        }
+      }
+    ],
+    "EnemyWaveInterval": [
+      {
+        "weight": 7.5,
+        "min": 142.5,
+        "max": 172.5
+      }
+    ],
+    "EnemyNormalWaveInterval": [
+      {
+        "weight": 4,
+        "min": 145,
+        "max": 180
+      },
+      {
+        "weight": 2,
+        "min": 180,
+        "max": 220
+      }
+    ],
+    "EnemyNormalWaveDifficulty": [
+      {
+        "weight": 1,
+        "min": 450,
+        "max": 550
+      }
+    ],
+    "EnemyDiversity": [
+      {
+        "weight": 2,
+        "min": 2,
+        "max": 3
+      },
+      {
+        "weight": 8,
+        "min": 4,
+        "max": 5
+      }
+    ],
+    "StationaryEnemyDiversity": [
+      {
+        "weight": 1,
+        "min": 7,
+        "max": 7
+      }
+    ],
+    "VeteranNormal": [
+      {
+        "weight": 2,
+        "min": 0,
+        "max": 0
+      },
+      {
+        "weight": 2,
+        "min": 0.325,
+        "max": 0.55
+      }
+    ],
+    "VeteranLarge": {
+      "Mutate": "IfFloat",
+      "Value": {
+        "Mutate": "EnemyCount",
+        "ED": "ED_Spider_ShieldTank"
+      },
+      "<=": 1,
+      "Then": 0.1875,
+      "Else": 0
+    },
+    "EnvironmentalDamageModifier": 1.25,
+    "PointExtractionScalar": 1.25,
+    "FriendlyFireModifier": 0.8,
+    "SpeedModifier": {
+      "Mutate": "Add",
+      "A": 1.2,
+      "B": {
+        "Mutate": "If",
+        "Condition": {
+          "Mutate": "DuringDrillevator"
+        },
+        "Then": 0.1,
+        "Else": 0
+      }
+    },
+    "AttackCooldownModifier": 1.625,
+    "ProjectileSpeedModifier": 1.8
+  },
+  "Salvage": {
+    "MiniMules": {
+      "ScanUsable": {
+        "UseDuration": 1
+      },
+      "RepairUsable": {
+        "UseDuration": {
+          "Mutate": "ByPlayerCount",
+          "Values": [
+            10,
+            20,
+            30,
+            40
+          ]
+        },
+        "CoopUseMultiplier": 5
+      },
+      "LegsRequired": {
+        "Mutate": "RandomChoice",
+        "Choices": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "Weights": [
+          0.2,
+          0.3,
+          0.3,
+          0.2
+        ]
+      },
+      "LegsPerMule": 6
+    },
+    "Uplink": {
+      "RepairUsable": {
+        "CoopUseMultiplier": 5
+      },
+      "Scale": {
+        "Mutate": "Add",
+        "A": 1,
+        "B": {
+          "Mutate": "IfFloat",
+          "Value": {
+            "Mutate": "EnemyCount"
+          },
+          ">": 100,
+          "Then": {
+            "Mutate": "Divide",
+            "A": {
+              "Mutate": "Subtract",
+              "A": {
+                "Mutate": "EnemyCount"
+              },
+              "B": 80
+            },
+            "B": 200
+          },
+          "Else": 0
+        }
+      }
+    },
+    "Refuel": {
+      "RepairUsable": {
+        "CoopUseMultiplier": 5
+      },
+      "Scale": {
+        "Mutate": "Add",
+        "A": 1,
+        "B": {
+          "Mutate": "IfFloat",
+          "Value": {
+            "Mutate": "EnemyCount"
+          },
+          ">": 100,
+          "Then": {
+            "Mutate": "Divide",
+            "A": {
+              "Mutate": "Subtract",
+              "A": {
+                "Mutate": "EnemyCount"
+              },
+              "B": 80
+            },
+            "B": 200
+          },
+          "Else": 0
+        }
+      }
+    }
+  },
+  "Dwarves": {
+    "Test": true,
+    "RegenHealthPerSecond": 5.8,
+    "RegenDelayAfterDamage": 6
+  },
+  "WaveSpawners": [
+    {
+      "Enabled": {
+        "Mutate": "IfFloat",
+        "Value": {
+          "Mutate": "DwarvesDown"
+        },
+        "==": 0,
+        "Then": {
+          "Mutate": "ByMissionType",
+          "Default": false,
+          "DeepScan": {
+            "Mutate": "DuringMission",
+            "StartingAt": 20
+          },
+          "Egg": {
+            "Mutate": "DuringMission",
+            "StartingAt": 20
+          },
+          "Elimination": {
+            "Mutate": "DuringMission",
+            "StartingAt": 20
+          },
+          "Escort": {
+            "Mutate": "DuringMission",
+            "StartingAt": 20
+          },
+          "Mining": {
+            "Mutate": "DuringMission",
+            "StartingAt": 20
+          },
+          "PE": {
+            "Mutate": "DuringMission",
+            "StartingAt": 300
+          },
+          "Refinery": {
+            "Mutate": "DuringMission",
+            "StartingAt": 200
+          },
+          "Sabotage": {
+            "Mutate": "DuringMission",
+            "StartingAt": 20
+          },
+          "Salvage": {
+            "Mutate": "DuringMission",
+            "StartingAt": 200
+          }
+        },
+        "Else": false
+      },
+      "Enemies": {
+        "Mutate": "RandomChoice",
+        "Choices": [
+          [
+            "ED_Spider_Shooter_WS"
+          ],
+          [
+            "ED_Spider_Spitter_WS"
+          ],
+          [
+            "ED_Spider_Grunt"
+          ]
+        ],
+        "Weights": [
+          15,
+          15,
+          70
+        ]
+      },
+      "Difficulty": {
+        "Mutate": "Multiply",
+        "A": {
+          "Mutate": "Add",
+          "A": -20,
+          "B": {
+            "Mutate": "Multiply",
+            "A": 60,
+            "B": {
+              "Mutate": "DwarvesAmmo"
+            }
+          }
+        },
+        "B": {
+          "Mutate": "IfFloat",
+          "Value": {
+            "Mutate": "TotalResource",
+            "Resource": "Nitra"
+          },
+          ">=": 180,
+          "Then": 1.25,
+          "Else": 1
+        }
+      },
+      "Interval": 80,
+      "Distance": 3000,
+      "Locations": 1,
+      "PauseOnDisable": true
+    },
+    {
+      "Enabled": {
+        "Mutate": "IfFloat",
+        "Value": {
+          "Mutate": "DwarvesDown"
+        },
+        "==": 0,
+        "Then": {
+          "Mutate": "ByMissionType",
+          "Default": false,
+          "DeepScan": {
+            "Mutate": "DuringMission",
+            "StartingAt": 20
+          },
+          "Egg": {
+            "Mutate": "DuringMission",
+            "StartingAt": 20
+          },
+          "Elimination": {
+            "Mutate": "DuringMission",
+            "StartingAt": 20
+          },
+          "Escort": {
+            "Mutate": "DuringMission",
+            "StartingAt": 20
+          },
+          "Mining": {
+            "Mutate": "DuringMission",
+            "StartingAt": 20
+          },
+          "PE": {
+            "Mutate": "DuringMission",
+            "StartingAt": 300
+          },
+          "Refinery": {
+            "Mutate": "DuringMission",
+            "StartingAt": 200
+          },
+          "Sabotage": {
+            "Mutate": "DuringMission",
+            "StartingAt": 20
+          },
+          "Salvage": {
+            "Mutate": "DuringMission",
+            "StartingAt": 200
+          }
+        },
+        "Else": false
+      },
+      "Enemies": {
+        "Mutate": "RandomChoice",
+        "Choices": [
+          [
+            "ED_Spider_RapidShooter"
+          ],
+          [
+            "ED_Grabber"
+          ],
+          [
+            "ED_Bomber"
+          ],
+          [
+            "ED_Spider_ExploderTank"
+          ]
+        ],
+        "Weights": [
+          32,
+          32,
+          32,
+          4
+        ]
+      },
+      "Difficulty": {
+        "Mutate": "Multiply",
+        "A": {
+          "Mutate": "Add",
+          "A": -20,
+          "B": {
+            "Mutate": "Multiply",
+            "A": 60,
+            "B": {
+              "Mutate": "DwarvesAmmo"
+            }
+          }
+        },
+        "B": {
+          "Mutate": "IfFloat",
+          "Value": {
+            "Mutate": "TotalResource",
+            "Resource": "Nitra"
+          },
+          ">=": 180,
+          "Then": 1.25,
+          "Else": 1
+        }
+      },
+      "Interval": 80,
+      "Distance": 3000,
+      "Locations": 1,
+      "PauseOnDisable": true
+    },
+    {
+      "Enabled": {
+        "Mutate": "IfFloat",
+        "Value": {
+          "Mutate": "EnemyCount",
+          "ED": "XED_DreadHelper"
+        },
+        "<": 1,
+        "Then": {
+          "Mutate": "IfFloat",
+          "Value": {
+            "Mutate": "Add",
+            "A": {
+              "Mutate": "EnemyCount",
+              "ED": "ED_Spider_Tank_Boss"
+            },
+            "B": {
+              "Mutate": "EnemyCount",
+              "ED": "ED_Spider_Boss_Heavy"
+            },
+            "C": {
+              "Mutate": "EnemyCount",
+              "ED": "ED_Spider_Boss_TwinB"
+            }
+          },
+          ">": 0,
+          "Then": true,
+          "Else": false
+        },
+        "Else": false
+      },
+      "Interval": 10,
+      "Enemies": [
+        "XED_DreadHelper",
+        "ED_Spider_Grunt",
+        "ED_Spider_Spitter",
+        "ED_Mactera_Shooter_Normal"
+      ],
+      "Difficulty": 60,
+      "Distance": 1750,
+      "Locations": 1
+    }
+  ],
+  "EscortMule": {
+    "FriendlyFireModifier": 0.1,
+    "BigHitDamageModifier": 0.75,
+    "BigHitDamageReductionThreshold": 0,
+    "NeutralDamageModifier": 0.1
+  },
+  "EnemiesNoSync": {
+    "ED_BarrageInfector": {
+      "SpawnAmountModifier": 0.5,
+      "MaxSpawnCount": {
+        "Mutate": "ByMissionType",
+        "Default": 1,
+        "Escort": 0
+      }
+    },
+    "ED_Bomber": {
+      "CanBeUsedInEncounters": true
+    },
+    "ED_CaveLeech": {
+      "Resistances": {
+        "PiercingDamageMultiplier": 0.2
+      },
+      "CaveLeech": {
+        "BiteDamage": 3,
+        "MaxDistanceXY": 900,
+        "GrapDelay": 0.05,
+        "TentacleSpeed": 600,
+        "TentacleRetractSpeed": 1800,
+        "TentaclePullSpeed": 2800,
+        "TentacleDropPlayerSpeed": 2200,
+        "MaxDropPlayerDuration": 10,
+        "Silent": true
+      }
+    },
+    "ED_CaveLeech_Elite": {
+      "Base": "ED_CaveLeech",
+      "ForceEliteBase": "ED_Grabber",
+      "DisplayName": "Eleech",
+      "Rarity": 2,
+      "SpawnAmountModifier": 0.08,
+      "MaxSpawnCount": 2,
+      "Elite": true,
+      "Temperature": {
+        "TemperatureChangeScale": 1
+      },
+      "Resistances": {
+        "PiercingDamageMultiplier": 0.2,
+        "DamageMultiplier": 0.75
+      },
+      "CaveLeech": {
+        "BiteDamage": 3,
+        "MaxDistanceXY": 3200,
+        "GrapDelay": 0.05,
+        "TentacleSpeed": 300,
+        "TentacleRetractSpeed": 800,
+        "TentaclePullSpeed": 1200,
+        "TentacleDropPlayerSpeed": 2200,
+        "MaxDropPlayerDuration": 10,
+        "Silent": true
+      }
+    },
+    "ED_FacilityTurret_Barrier": {
+      "Base": "ED_ShootingPlant"
+    },
+    "ED_Grabber": {
+      "CanBeUsedInEncounters": true
+    },
+    "ED_Jelly_Swarmer": {
+      "SpawnAmountModifier": 0.4,
+      "Rarity": 12,
+      "NoSpawnWithin": 1200
+    },
+    "ED_Ossiran_Scrab": {
+      "CustomVeterans": {
+        "ED_Ossiran_Scrab": 50,
+        "ED_Spider_Grunt": 25,
+        "ED_Spider_Swarmer": 25
+      }
+    },
+    "ED_PatrolBot": {
+      "MaxSpawnCount": {
+        "Mutate": "If",
+        "Condition": {
+          "Mutate": "DuringGenericSwarm"
+        },
+        "Then": 0,
+        "Else": 1
+      }
+    },
+    "ED_Shredder": {
+      "SpawnAmountModifier": 0.1,
+      "NoSpawnWithin": 1200
+    },
+    "ED_Spider_Boss_Heavy": {
+      "Temperature": {
+        "BurnTemperature": 100,
+        "DouseFireTemperature": 50
+      }
+    },
+    "ED_Spider_Boss_TwinA": {
+      "Temperature": {
+        "BurnTemperature": 100,
+        "DouseFireTemperature": 50
+      }
+    },
+    "ED_Spider_Boss_TwinB": {
+      "Temperature": {
+        "BurnTemperature": 100,
+        "DouseFireTemperature": 50
+      }
+    },
+    "ED_Spider_Exploder": {
+      "CanBeUsedInEncounters": false
+    },
+    "ED_Spider_Exploder_Variable_Speed": {
+      "Base": "ED_Spider_Exploder",
+      "Rarity": 1,
+      "DifficultyRating": 25,
+      "MinSpawnCount": 1,
+      "MaxSpawnCount": 9999,
+      "CanBeUsedInEncounters": false,
+      "CustomVeterans": {
+        "ED_Spider_Exploder_Variable_Speed_1": 0.25,
+        "ED_Spider_Exploder_Variable_Speed_2": 0.25,
+        "ED_Spider_Exploder_Variable_Speed_3": 0.25,
+        "ED_Spider_Exploder_Variable_Speed_4": 0.25
+      }
+    },
+    "ED_Spider_Exploder_Variable_Speed_1": {
+      "Base": "ED_Spider_Exploder",
+      "Movement": {
+        "MaxPawnSpeed": 0.9,
+        "StrafeSpeed": 0.9,
+        "MaxStrafeDistance": 0.9,
+        "AlignDirectionSpeed": 0.9,
+        "MaxAcceleration": 0.9,
+        "MaxBrakingDeceleration": 0.9,
+        "AlignToTargetMinRequiredAngle": 0.9
+      }
+    },
+    "ED_Spider_Exploder_Variable_Speed_2": {
+      "Base": "ED_Spider_Exploder",
+      "Movement": {
+        "MaxPawnSpeed": 0.8,
+        "StrafeSpeed": 0.8,
+        "MaxStrafeDistance": 0.8,
+        "AlignDirectionSpeed": 0.8,
+        "MaxAcceleration": 0.8,
+        "MaxBrakingDeceleration": 0.8,
+        "AlignToTargetMinRequiredAngle": 0.8
+      }
+    },
+    "ED_Spider_Exploder_Variable_Speed_3": {
+      "Base": "ED_Spider_Exploder",
+      "Movement": {
+        "MaxPawnSpeed": 1.25,
+        "StrafeSpeed": 1.25,
+        "MaxStrafeDistance": 1.25,
+        "AlignDirectionSpeed": 1.25,
+        "MaxAcceleration": 1.25,
+        "MaxBrakingDeceleration": 1.25,
+        "AlignToTargetMinRequiredAngle": 1.25
+      }
+    },
+    "ED_Spider_Exploder_Variable_Speed_4": {
+      "Base": "ED_Spider_Exploder"
+    },
+    "ED_Spider_ExploderTank": {
+      "CanPlayerStandOn": true,
+      "CanBeUsedInEncounters": {
+        "Mutate": "ByMissionType",
+        "Default": {
+          "Mutate": "IfFloat",
+          "Value": {
+            "Mutate": "GunnerCount"
+          },
+          "==": 0,
+          "Then": false,
+          "Else": true
+        },
+        "Escort": false
+      },
+      "Direct": {
+        "Int:NumClusterBombs": {
+          "Mutate": "ByMissionType",
+          "Default": 8,
+          "Salvage": 0
+        }
+      }
+    },
+    "ED_Spider_Grunt_Guard": {
+      "CustomVeterans": {
+        "ED_Spider_Grunt_Guard": {
+          "Mutate": "Divide",
+          "A": {
+            "Mutate": "Subtract",
+            "A": 150,
+            "B": {
+              "Mutate": "IWsLeft"
+            }
+          },
+          "B": 150
+        },
+        "ED_Spider_Grunt_Guard_Elite": {
+          "Mutate": "Divide",
+          "A": {
+            "Mutate": "Add",
+            "A": 0,
+            "B": {
+              "Mutate": "IWsLeft"
+            }
+          },
+          "B": 150
+        }
+      }
+    },
+    "ED_Spider_Grunt_Guard_Elite": {
+      "Base": "ED_Spider_Grunt_Guard",
+      "Elite": true,
+      "Resistances": {
+        "DamageMultiplier": 0.5
+      },
+      "Temperature": {
+        "TemperatureChangeScale": 1.5
+      }
+    },
+    "ED_Spider_ShieldTank": {
+      "Movement": {
+        "AlignDirectionSpeed": 1.1,
+        "AlignToTargetMinRequiredAngle": 1.1,
+        "MaxAcceleration": 1.5,
+        "MaxBrakingDeceleration": 1.5,
+        "MaxPawnSpeed": 1.15,
+        "MaxStrafeDistance": 1.15,
+        "StrafeSpeed": 1.15
+      }
+    },
+    "ED_Spider_Shooter_WS": {
+      "Base": "ED_Spider_Shooter",
+      "DifficultyRating": 20
+    },
+    "ED_Spider_Spitter_WS": {
+      "Base": "ED_Spider_Spitter",
+      "DifficultyRating": 18
+    },
+    "ED_SpiderSpawner": {
+      "SpawnAmountModifier": 0.3,
+      "MaxSpawnCount": 0
+    },
+    "ED_Spider_Stinger": {
+      "CanPlayerStandOn": true
+    },
+    "ED_Spider_Tank_Boss": {
+      "Temperature": {
+        "BurnTemperature": 100,
+        "DouseFireTemperature": 50
+      }
+    },
+    "ED_Spider_Tank_HeavySpawn": {
+      "SpawnSpread": 500
+    },
+    "XED_DreadHelper": {
+      "Base": "ED_Spider_ExploderTank",
+      "Resistances": {
+        "DamageMultiplier": 1.18
+      },
+      "WeakpointHP": 300,
+      "MaxSpawnCount": 0,
+      "SpawnAmountModifier": 0.01,
+      "DifficultyRating": 1,
+      "MinSpawnCount": 0,
+      "Movement": {
+        "MaxPawnSpeed": 1.25,
+        "StrafeSpeed": 1.25,
+        "MaxStrafeDistance": 1.25,
+        "AlignDirectionSpeed": 1.25,
+        "MaxAcceleration": 1.25,
+        "MaxBrakingDeceleration": 1.25,
+        "AlignToTargetMinRequiredAngle": 1.1
+      }
+    },
+    "XED_Trash_Breeder_Jr": {
+      "Base": "ED_JellyBreeder",
+      "DisplayName": "Trash Breeder Jr.",
+      "CanBeUsedInEncounters": false,
+      "MaxSpawnCount": 0,
+      "MinSpawnCount": 0,
+      "Rarity": 10,
+      "DifficultyRating": 120,
+      "Elite": true,
+      "ForceEliteBase": "ED_Grabber",
+      "JellyBreeder": {
+        "EnemyToSpawn": "XED_Trash_Spawns",
+        "SpawnAmount": {
+          "Mutate": "Subtract",
+          "A": 4,
+          "B": {
+            "Mutate": "DwarvesDown"
+          }
+        },
+        "EggBurstSize": {
+          "Mutate": "Subtract",
+          "A": 3,
+          "B": {
+            "Mutate": "DwarvesDown"
+          }
+        },
+        "TimeBetweenEggs": 2,
+        "TimeBetweenBursts": 15,
+        "EggName": "Trash Egg",
+        "MaxJellies": {
+          "Mutate": "Subtract",
+          "A": 120,
+          "B": {
+            "Mutate": "Multiply",
+            "A": 35,
+            "B": {
+              "Mutate": "DwarvesDown"
+            }
+          }
+        }
+      },
+      "Temperature": {
+        "TemperatureChangeScale": 1
+      },
+      "Resistances": {
+        "DamageMultiplier": 1.5
+      }
+    },
+    "XED_Trash_Spawns": {
+      "Base": "ED_Spider_Grunt",
+      "CustomVeterans": {
+        "ED_Spider_Grunt": 0.54,
+        "ED_Spider_Swarmer": 0.2,
+        "ED_Spider_Exploder": 0.16,
+        "ED_Mactera_Shooter_Normal": 0.1
+      }
+    }
+  },
+  "Messages": [
+    {
+      "Send": {
+        "Mutate": "IfFloat",
+        "Value": {
+          "Mutate": "DepositedResource",
+          "Resource": "Nitra"
+        },
+        ">=": {
+          "Mutate": "IfFloat",
+          "Value": {
+            "Mutate": "ResuppliesCalled"
+          },
+          ">=": 2,
+          "Then": 60,
+          "Else": 40
+        },
+        "Then": true,
+        "Else": false
+      },
+      "Message": {
+        "Mutate": "IfFloat",
+        "Value": {
+          "Mutate": "ResuppliesCalled"
+        },
+        ">=": 2,
+        "Then": "!!! Resupply Available - Next resup = 60 Nitra",
+        "Else": "!!! Resupply Available - Next resup = 40 Nitra"
+      },
+      "Type": "Developer",
+      "Sender": "Dave's Junior (5.5x2)"
+    },
+    {
+      "Send": {
+        "Mutate": "IfFloat",
+        "Value": {
+          "Mutate": "EnemyCount",
+          "ED": "XED_Trash_Breeder_Jr"
+        },
+        ">=": 1,
+        "Then": true,
+        "Else": false
+      },
+      "Message": "!!! Trash Breeder Jr. Spawned",
+      "Type": "Developer",
+      "Sender": "Dave's Junior (5.5x2)"
+    },
+    {
+      "Send": {
+        "Mutate": "DuringMission",
+        "StartingAt": 20
+      },
+      "Message": "First 2 resupplies = 40 nitra",
+      "Type": "Developer",
+      "Sender": "Dave's Junior (5.5x2)"
+    },
+    {
+      "Send": {
+        "Mutate": "DuringMission",
+        "StartingAt": 21
+      },
+      "Message": "All other resupplies = 60 nitra",
+      "Type": "Developer",
+      "Sender": "Dave's Junior (5.5x2)"
+    },
+    {
+      "Send": {
+        "Mutate": "DuringMission",
+        "StartingAt": 23
+      },
+      "Message": "Enjoy :D",
+      "Type": "Developer",
+      "Sender": "Dave's Junior (5.5x2)"
+    }
+  ],
+  "SoundCues": [
+    {
+      "Play": {
+        "Mutate": "TriggerOnChange",
+        "RiseOnly": true,
+        "Value": {
+          "Mutate": "EnemyCount",
+          "ED": "XED_Trash_Breeder_Jr"
+        }
+      },
+      "Cue": "/Game/Audio/SFX/Refinery/RefineryComplete_Cue.RefineryComplete_Cue"
+    }
+  ]
+}
